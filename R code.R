@@ -11,17 +11,17 @@ library(openxlsx)
 
 
 
-### This is the sheet we will use
+### This is the sheet we will use 
 gsheet <- "https://docs.google.com/spreadsheets/d/1XZrDf0eYgSfDiJNj74lBNK3T6AhACeXBn9wsMRlkPoM/edit#gid=0"
 
 
 
 # Demo 1 ---------------------------------------
 
-## Adding sheets tot he spradsheet
+## Adding sheets to the spreadsheet
 
 ### creating a vector of the months we will add
-sheet_months <- c("JAN2017",
+sheet_months <- list("JAN2017",
                   "FEB2017",
                   "MAR2017",
                   "APR2017",
@@ -34,6 +34,7 @@ sheet_months <- c("JAN2017",
                   "NOV2017",
                   "DEC2017")
 
+### Creating the tabs
 
 for (gtab in sheet_months) {
   
@@ -46,13 +47,14 @@ for (gtab in sheet_months) {
 
 ### Adding data to sheets
 
-tmonth<- read.csv(file = paste0("/",gtab,".csv",
+for(gtab in sheet_months){
+tmonth<- read.csv(file = paste0("Transaction Data/",gtab,".csv",
                        sep = ""))
 
 sheet_write(tmonth,
             ss = gsheet,
             sheet = gtab)
-
+}
 
 
 # Demo 2 ------------------------------------------------------------------
@@ -60,13 +62,17 @@ sheet_write(tmonth,
 
 ## Adding all months to the main data tab
 
-
-tmonth<- read.csv(file = paste0("/",gtab,".csv",
-                                sep = ""))
-
-sheet_append(ss = gsheet,
-             data = tmonth,
-             sheet = gtab)
+for (gtab in sheet_months) {
+  
+  tmonth<- read.csv(file = paste0("Transaction Data/",gtab,".csv",
+                                  sep = ""))
+  
+  sheet_append(ss = gsheet,
+               data = tmonth,
+               sheet = "Data")
+ 
+  
+}
 
 
 
@@ -78,17 +84,21 @@ sheet_append(ss = gsheet,
 
 ### Lets grab the data tab
 main_data<- read_sheet(ss = gsheet,
-                       sheet = Data)
+                       sheet = "Data")
 
+glimpse(main_data)
 
-### Cleaning for just units sold by Sku for Manufacturing department
+### Cleaning for just units sold by SKU for Manufacturing department
 
 ManDep <- 
   main_data%>%
   select(SKU = sku,
-         Units = quanity)%>%
+         Units = quantity)%>%
   group_by(SKU)%>%
   summarise(Units = sum(Units))
+
+
+View(ManDep)
 
 ### Add data to spreadsheet
 
@@ -101,9 +111,4 @@ write_sheet(ManDep,
 
 
 
-
-
-
-
-read.csv(file= "/SpeedUpReportsWithR/Transaction Data/JAN2017.csv")
 
