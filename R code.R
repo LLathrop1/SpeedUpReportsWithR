@@ -12,7 +12,7 @@ library(openxlsx)
 
 
 ### This is the sheet we will use 
-gsheet <- "https://docs.google.com/spreadsheets/d/1XZrDf0eYgSfDiJNj74lBNK3T6AhACeXBn9wsMRlkPoM/edit#gid=0"
+gsheet <- "https://docs.google.com/spreadsheets/d/INSERT YOUR SPREAD SHEET ID HERE/edit#gid=0"
 
 
 
